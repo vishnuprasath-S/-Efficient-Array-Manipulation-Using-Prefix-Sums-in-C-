@@ -1,0 +1,60 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Function to find the maximum value after operations
+long arrayManipulation(int n, int queries[][3], int m) {
+    // Allocate and initialize the array with zeros
+    long *arr = (long *)calloc(n + 1, sizeof(long));
+    if (!arr) {
+        perror("Memory allocation failed");
+        return -1;
+    }
+
+    // Process each query
+    for (int i = 0; i < m; i++) {
+        int a = queries[i][0];
+        int b = queries[i][1];
+        int k = queries[i][2];
+
+        arr[a - 1] += k;
+        if (b < n) {
+            arr[b] -= k;
+        }
+    }
+
+    // Find the maximum value using a prefix sum
+    long max = 0, current = 0;
+    for (int i = 0; i < n; i++) {
+        current += arr[i];
+        if (current > max) {
+            max = current;
+        }
+    }
+
+    // Free allocated memory
+    free(arr);
+
+    return max;
+}
+
+int main() {
+    int n, m;
+
+    // Input size of the array and number of queries
+    scanf("%d %d", &n, &m);
+
+    int queries[m][3];
+
+    // Input queries
+    for (int i = 0; i < m; i++) {
+        scanf("%d %d %d", &queries[i][0], &queries[i][1], &queries[i][2]);
+    }
+
+    // Call the arrayManipulation function
+    long result = arrayManipulation(n, queries, m);
+
+    // Output the result
+    printf("%ld\n", result);
+
+    return 0;
+}
